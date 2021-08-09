@@ -35,7 +35,7 @@ public class NBody{
 		double dt= Double.parseDouble(args[1]);
 		String fileName=args[2];
 		Planet [] allPlanets=readPlanets(fileName);
-		planetNum=allPlanets.length;
+		int planetNum=allPlanets.length;
 		double radius=readRadius(fileName);
 		
 		StdDraw.setScale(-radius, radius);
