@@ -8,11 +8,12 @@ public class NBody{
 	
 	public static Planet [] readPlanets(String fileName){
 		In in = new In(fileName);
-		Planet [] allPlanets=new Planet[5];
-	    in.readLine();
-		in.readLine();
+		int planetNum=in.readInt();
+		double radiusUniverse = in.readDouble();
+		Planet [] allPlanets=new Planet[planetNum];
+	   
 		
-	    for(int i=0;i<5;i++){
+	    for(int i=0;i<planetNum;i++){
 			double xP=in.readDouble();
 			double yP=in.readDouble();
 			double xV=in.readDouble();
@@ -34,6 +35,7 @@ public class NBody{
 		double dt= Double.parseDouble(args[1]);
 		String fileName=args[2];
 		Planet [] allPlanets=readPlanets(fileName);
+		planetNum=allPlanets.length;
 		double radius=readRadius(fileName);
 		
 		StdDraw.setScale(-radius, radius);
@@ -46,13 +48,13 @@ public class NBody{
 		}
 		int waitTimeMilliseconds = 10;
 	    for (double t=0;t<T;t+=dt){
-			double [] xForces=new double[5];
-			double [] yForces=new double[5];
-			for(int i=0;i<5;i++){
+			double [] xForces=new double[planetNum];
+			double [] yForces=new double[planetNum];
+			for(int i=0;i<planetNum;i++){
 				xForces[i]=allPlanets[i].calcNetForceExertedByX(allPlanets);
 				yForces[i]=allPlanets[i].calcNetForceExertedByY(allPlanets);
 			}
-			for(int i=0;i<5;i++){
+			for(int i=0;i<planetNum;i++){
 				allPlanets[i].update(dt,xForces[i],yForces[i]);
 			}
 			StdDraw.picture(0,0,backImg);
