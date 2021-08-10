@@ -1,5 +1,6 @@
 import static org.junit.Assert.*;
 
+import jdk.nashorn.internal.ir.IdentNode;
 import org.junit.Test;
 
 public class IntListTest {
@@ -64,6 +65,16 @@ public class IntListTest {
         IntList exp = IntList.of(1, 2, 3, 4, 5, 6);
         assertEquals(exp, IntList.catenate(A, B));
         assertEquals(IntList.of(1, 2, 3), A);
+    }
+
+    @Test
+    public void testReverse(){
+        IntList A=IntList.of(1,2,3);
+        IntList exp=IntList.of(3,2,1);
+        assertEquals(exp,IntList.reverse(A));
+        assertNotEquals(IntList.of(1,2,3), A);
+        IntList B=IntList.of();
+        assertEquals(null, IntList.reverse(B));
     }
 
     /** If you're running this from the command line, you'll need
