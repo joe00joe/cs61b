@@ -25,7 +25,7 @@ public class TestPalindrome {
     @Test
     public  void testNewIspali(){
        // OffByOne cc=new OffByOne();
-        OffByN cc=new OffByN(1);
+        OffByOne cc=new OffByOne();
         assertTrue(palindrome.isPalindrome("",cc));
         assertTrue(palindrome.isPalindrome("a",cc));
         assertTrue(palindrome.isPalindrome("flake",cc));
