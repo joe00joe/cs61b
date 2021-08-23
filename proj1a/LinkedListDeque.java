@@ -55,7 +55,7 @@ public class  LinkedListDeque<T> {
         }
         System.out.println();
     }
-    public T removeFirst(){
+    public T removeLast(){
         if(size==0){
             return null;
         }
@@ -65,7 +65,7 @@ public class  LinkedListDeque<T> {
         size--;
         return  removeNode.item;
     }
-    public T removeLast(){
+    public T removeFirst(){
         if(size==0){
             return null;
         }
