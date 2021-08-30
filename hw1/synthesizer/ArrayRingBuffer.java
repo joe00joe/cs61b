@@ -1,5 +1,6 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 package synthesizer;
+import java.time.chrono.MinguoDate;
 import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public
@@ -75,5 +76,25 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
         return rb[first];
     }
 
+
     // TODO: When you get to part 5, implement the needed code to support iteration.
+    private class rbIterator implements Iterator<T> {
+        private  int index;
+        public rbIterator(){
+            index=0;
+        }
+
+        public  boolean  hasNext(){
+            return index<capacity;
+        }
+
+        public T next() {
+            T curThing =rb[index];
+            index++;
+            return curThing;
+        }
+    }
+    public Iterator<T> iterator(){
+        return new rbIterator();
+    }
 }

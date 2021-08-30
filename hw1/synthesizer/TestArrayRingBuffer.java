@@ -1,4 +1,5 @@
 package synthesizer;
+import edu.princeton.cs.algs4.In;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -14,12 +15,15 @@ public class TestArrayRingBuffer {
         arb.enqueue(1);
         arb.enqueue(2);
         arb.enqueue(3);
+
         assertTrue(arb.isFull());
         assertEquals(1, arb.dequeue());
         assertFalse(arb.isFull());
         assertEquals(2, arb.peek());
         arb.enqueue(4);
         assertTrue(arb.isFull());
+
+
     }
 
     /** Calls tests for ArrayRingBuffer. */

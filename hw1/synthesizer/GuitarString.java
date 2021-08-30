@@ -62,4 +62,5 @@ public class GuitarString {
         // TODO: Return the correct thing.
         return buffer.peek();
     }
+
 }
