@@ -1,8 +1,7 @@
 package hw2;
 
-import edu.princeton.cs.algs4.GabowSCC;
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.OPCode;
 
 public class Percolation {
     private  boolean [][] grid;
@@ -93,7 +92,7 @@ public class Percolation {
         System.out.print(p.percolates());
 
     }
-    
+
 
 }
 
