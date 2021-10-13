@@ -1,5 +1,6 @@
 package lab9;
 
+
 import java.util.Iterator;
 import java.util.Set;
 
@@ -17,9 +18,10 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     private ArrayMap<K, V>[] buckets;
     private int size;
 
-    private int loadFactor() {
-        return size / buckets.length;
+    private double loadFactor() {
+        return (double)size / buckets.length;
     }
+
 
     public MyHashMap() {
         buckets = new ArrayMap[DEFAULT_SIZE];
@@ -53,19 +55,50 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
-        throw new UnsupportedOperationException();
+        int hIndex=hash(key);
+        return buckets[hIndex].get(key);
     }
 
+    private  void resize(int capacity){
+        ArrayMap[] newBuckets = new ArrayMap[capacity];
+        for (int i = 0; i < newBuckets.length; i += 1) {
+            newBuckets[i] = new ArrayMap<>();
+        }
+        for(int i=0;i<buckets.length;i+=1){
+            if(buckets[i].size()!=0){
+                for(K key:buckets[i]){
+                    int rhIndex=Math.floorMod(key.hashCode(), newBuckets.length);
+                    newBuckets[rhIndex].put(key,buckets[i].get(key));
+                }
+            }
+        }
+        buckets= newBuckets;
+    }
     /* Associates the specified value with the specified key in this map. */
+
     @Override
     public void put(K key, V value) {
-        throw new UnsupportedOperationException();
+        int hIndex=hash(key);
+        if(buckets[hIndex].containsKey(key)){
+            if(buckets[hIndex].get(key)!=value){
+                buckets[hIndex].put(key,value);
+            }
+        }
+        else{
+            buckets[hIndex].put(key,value);
+            size+=1;
+            if (loadFactor()>MAX_LF) {
+                resize(buckets.length * 2);
+            }
+        }
+
+
     }
 
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
-        throw new UnsupportedOperationException();
+        return size;
     }
 
     //////////////// EVERYTHING BELOW THIS LINE IS OPTIONAL ////////////////
