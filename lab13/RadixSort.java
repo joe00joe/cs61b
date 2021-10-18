@@ -1,3 +1,4 @@
+
 /**
  * Class for doing Radix sort
  *
@@ -15,9 +16,52 @@ public class RadixSort {
      *
      * @return String[] the sorted array
      */
+
     public static String[] sort(String[] asciis) {
         // TODO: Implement LSD Sort
-        return null;
+        if(asciis.length<=1){
+            return asciis;
+        }
+        int max=0;
+        for(String s:asciis){
+            max = max > s.length() ? max : s.length();
+        }
+        String[] apended=appendZero(asciis,max);
+        for(int idx=max-1;idx>=0;idx--){
+            sortHelperLSD(apended,idx);
+        }
+        String[] reduced=reduceZero(apended);
+        return reduced;
+    }
+
+    private  static String [] appendZero(String[] asciis,int len){
+        int index = 0;
+        String[] res = new String[asciis.length];
+        for (String s : asciis) {
+            StringBuffer sbu = new StringBuffer();
+            sbu.append(s);
+            if (s.length() < len) {
+                for (int i = 0; i < len - s.length(); i++) {
+                    sbu.append((char) 0);
+                }
+            }
+            res[index++] = sbu.toString();
+        }
+        return res;
+    }
+
+    private  static  String[] reduceZero(String[] asciis){
+        int index = 0;
+        String[] res = new String[asciis.length];
+        for (String s : asciis) {
+            StringBuffer sbu = new StringBuffer();
+            sbu.append(s);
+            for (int i = sbu.length() - 1; i >= 0 && sbu.charAt(i) == (char) 0; i--) {
+                sbu.deleteCharAt(i);
+            }
+            res[index++] = sbu.toString();
+        }
+        return res;
     }
 
     /**
@@ -28,7 +72,26 @@ public class RadixSort {
      */
     private static void sortHelperLSD(String[] asciis, int index) {
         // Optional LSD helper method for required LSD radix sort
-        return;
+        int counts[]=new int[256];
+        for(String s :asciis){
+            counts[(int)s.charAt(index)]++;
+        }
+        int starts[] =new int[256];
+        int pos=0;
+        for(int i=0;i<counts.length;i++) {
+            starts[i]=pos;
+            pos+=counts[i];
+        }
+
+        String [] sorted= new String[asciis.length];
+        for(String s:asciis){
+            int place=starts[(int)s.charAt(index)];
+            sorted[place]=s;
+            starts[(int)s.charAt(index)]++;
+        }
+        for(int i=0;i<sorted.length;i++){
+            asciis[i]=sorted[i];
+        }
     }
 
     /**
@@ -44,5 +107,12 @@ public class RadixSort {
     private static void sortHelperMSD(String[] asciis, int start, int end, int index) {
         // Optional MSD helper method for optional MSD radix sort
         return;
+    }
+    public static void main(String args[]) {
+        String[] strs = {"abcc", "abcd", "ggg", "vcx", "crx", "pyf"};
+        String[] sorted = sort(strs);
+        for (String s : sorted) {
+            System.out.print(s + " ");
+        }
     }
 }

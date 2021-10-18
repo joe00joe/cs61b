@@ -1,3 +1,4 @@
+
 /**
  * Class with 2 ways of doing Counting sort, one naive way and one "better" way
  *
@@ -13,6 +14,8 @@ public class CountingSort {
      * @param arr int array that will be sorted
      * @return the sorted array
      */
+
+
     public static int[] naiveCountingSort(int[] arr) {
         // find max
         int max = Integer.MIN_VALUE;
@@ -56,7 +59,9 @@ public class CountingSort {
         // return the sorted array
         return sorted;
     }
-
+    private  static int getIndex(int i,int min){
+        return i- min;
+    }
     /**
      * Counting sort on the given int array, must work even with negative numbers.
      * Note, this code does not need to work for ranges of numbers greater
@@ -65,8 +70,40 @@ public class CountingSort {
      *
      * @param arr int array that will be sorted
      */
+
     public static int[] betterCountingSort(int[] arr) {
         // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        int min=Integer.MAX_VALUE;
+        int max=Integer.MIN_VALUE;
+        for (int i : arr) {
+            max = max > i ? max : i;
+        }
+        for (int i:arr){
+            min = min< i ? min : i;
+        }
+
+        int[] counts = new int[max-min + 1];
+        for (int i : arr) {
+            int index=getIndex(i,min);
+            counts[index]++;
+        }
+
+        int[] starts = new int[max-min + 1];
+        int pos = 0;
+        for (int i = 0; i < starts.length; i += 1) {
+            starts[i] = pos;
+            pos += counts[i];
+        }
+
+        int[] sorted = new int[arr.length];
+        for (int i = 0; i < arr.length; i += 1) {
+            int item = arr[i];
+            int index=getIndex(item,min);
+            int place = starts[index];
+            sorted[place] = item;
+            starts[index] += 1;
+        }
+        return sorted;
+
     }
 }
