@@ -122,6 +122,9 @@ public class SeamCarver {
     }              // sequence of indices for vertical seam
 
     private  double getMin(double[][] minCost,int h,int w) {
+        if(w==0 && w==width-1){
+            return minCost[h-1][w];
+        }
         if(w==0){
             return Math.min(minCost[h-1][w],minCost[h-1][w+1]);
         }
@@ -135,6 +138,7 @@ public class SeamCarver {
     public    void removeHorizontalSeam(int[] seam){
         if(checkSeam(seam)&& seam.length==width){
             this.picture=new Picture(SeamRemover.removeHorizontalSeam(this.picture,seam));
+            height--;
         }
         else{
             throw new java.lang.IllegalArgumentException();
@@ -144,6 +148,7 @@ public class SeamCarver {
     public    void removeVerticalSeam(int[] seam){
         if(checkSeam(seam) && seam.length==height){
             this.picture = new Picture(SeamRemover.removeVerticalSeam(this.picture, seam));
+            this.width--;
         }
         else{
             throw new java.lang.IllegalArgumentException();
