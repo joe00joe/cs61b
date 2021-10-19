@@ -111,7 +111,7 @@ public class SeamCarver {
                 min=minCost[h][minIdx];
                 minIdx=minIdx;
             }
-            if(minIdx+1<=width && minCost[h][minIdx+1]==min-energy(minIdx,h+1)){
+            if(minIdx+1<=width-1 && minCost[h][minIdx+1]==min-energy(minIdx,h+1)){
                 min=minCost[h][minIdx+1];
                 minIdx=minIdx+1;
             }
