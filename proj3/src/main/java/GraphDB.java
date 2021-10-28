@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.Writer;
 import java.util.*;
 
 /**
@@ -36,6 +37,23 @@ public class GraphDB {
             this.extraInfo = new HashMap<>();
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof Node) {
+                return  this.id==((Node) o).id
+                        && this.lon==((Node) o).lon
+                        && extraInfo.equals(((Node) o).extraInfo);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, lon,lat, extraInfo);
+        }
+
+
+
     }
     public   void addNode(Node node){
         nodes.put(node.id,node);
@@ -51,6 +69,22 @@ public class GraphDB {
             this.isVaild=false;
             this.nodeIDs=new ArrayList<>();
             this.extraInfo=new HashMap<>();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof Way) {
+                return  this.id==((Node) o).id
+                        && this.isVaild==((Way) o).isVaild
+                        && this.nodeIDs.equals(((Way) o).nodeIDs)
+                        && extraInfo.equals(((Way) o).extraInfo);
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, isVaild,nodeIDs, extraInfo);
         }
 
     }
