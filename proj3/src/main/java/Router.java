@@ -25,7 +25,6 @@ public class Router {
 
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        /**
 
         long startNode=g.closest(stlon,stlat);
         long targetNode=g.closest(destlon,destlat);
@@ -56,85 +55,33 @@ public class Router {
         distTo.replace(startNode,0.0);
         while(!fringe.isEmpty()){
             long minNode=fringe.poll();
-            visted.add(minNode);
             if(minNode==targetNode){
                 break;
             }
-            for(long v:g.adjacent(minNode)){
-                if(!visted.contains(v)) {
+            if(!visted.contains(minNode)){
+                visted.add(minNode);
+                for(long v:g.adjacent(minNode)){
                     double distance=distTo.get(minNode)+g.distance(minNode,v);
-                    edgeTo.put(v,minNode);
-                    distTo.put(v,distance);
-                    fringe.add(v);
+                    if(distance < distTo.get(v)){
+                        edgeTo.put(v,minNode);
+                        distTo.put(v,distance);
+                        double vCost=distTo.get(v)+g.distance(v,targetNode);
+                        fringe.add(v);
+                    }
+
                 }
-
-
             }
 
         }
         List<Long> path=new LinkedList<>();
+        if(edgeTo.get(targetNode)==Double.POSITIVE_INFINITY){
+            return path;
+        }
         for(Long v=targetNode;v!=startNode;v=edgeTo.get(v)){
             path.add(0,v);
         }
         path.add(0,startNode);
         return path;
-         */
-        /* Initialize structures to get shortest path */
-        Map<Long, Long> edgeTo = new HashMap<>();
-        Map<Long, Double> distTo = new HashMap<>();
-        Set<Long> visited = new HashSet<>();
-        List<Long> route = new LinkedList<>();
-        long src = g.closest(stlon, stlat);
-        long dest = g.closest(destlon, destlat);
-        PriorityQueue<Long> fringe = new PriorityQueue<Long>(new Comparator<Long>() {
-            @Override
-            public int compare(Long w, Long v) {
-                double wCost = distTo.get(w) + g.distance(w, dest);
-                double vCost = distTo.get(v) + g.distance(v, dest);
-                if (wCost < vCost) {
-                    return -1;
-                }
-                if (wCost > vCost) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
-
-        /* Add initial values to edgeTo, distTo, and fringe */
-        for (long v : g.vertices()) {
-            distTo.put(v, Double.POSITIVE_INFINITY);
-            edgeTo.put(v, (long) -117);
-        }
-        distTo.replace(src, 0.0);
-        edgeTo.put(src, (long) 0);
-        fringe.add(src);
-
-        /* A* search algorithm */
-        while (!fringe.isEmpty()) {
-            long curr = fringe.poll();
-            if (curr == dest) {
-                break;
-            }
-            if (!visited.contains(curr)) {
-                visited.add(curr);
-                for (long neighbor : g.adjacent(curr)) {
-                    double distance = distTo.get(curr) + g.distance(curr, neighbor);
-                    if (distance < distTo.get(neighbor)) {
-                        distTo.put(neighbor, distance);
-                        edgeTo.put(neighbor, curr);
-                        fringe.add(neighbor);
-                    }
-                }
-            }
-        }
-
-        /* Get path to destination. */
-        for (long e = dest; e != 0; e = edgeTo.get(e)) {
-            route.add(0, e);
-        }
-
-        return route;
 
     }
 
