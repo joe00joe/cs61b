@@ -1,5 +1,4 @@
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,9 +22,64 @@ public class Router {
      * @param destlat The latitude of the destination location.
      * @return A list of node id's in the order visited on the shortest path.
      */
+
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+
+        long startNode=g.closest(stlon,stlat);
+        long targetNode=g.closest(destlon,destlat);
+        Map<Long,Long> edgeTo=new HashMap<>();
+        Map<Long,Double> distTo=new HashMap<>();
+        for (long v : g.vertices()) {
+            distTo.put(v, Double.POSITIVE_INFINITY);
+            edgeTo.put(v, (long) -117);
+        }
+        Set<Long> visted=new HashSet<>();
+        PriorityQueue<Long> fringe = new PriorityQueue<Long>(new Comparator<Long>() {
+            @Override
+            public int compare(Long w, Long v) {
+                double wCost=distTo.get(w)+g.distance(w,targetNode);
+                double vCost=distTo.get(v)+g.distance(v,targetNode);
+                if(wCost==vCost){
+                    return 0;
+                }else if(wCost<vCost){
+                    return -1;
+                }else{
+                    return 1;
+                }
+            }
+        });
+
+        fringe.add(startNode);
+        edgeTo.put(startNode,Long.MIN_VALUE);
+        distTo.replace(startNode,0.0);
+        while(!fringe.isEmpty()){
+            long minNode=fringe.poll();
+            if(minNode==targetNode){
+                break;
+            }
+            if(!visted.contains(minNode)){
+                visted.add(minNode);
+                for(long v:g.adjacent(minNode)){
+                    double distance=distTo.get(minNode)+g.distance(minNode,v);
+                    if(distance < distTo.get(v)){
+                        edgeTo.put(v,minNode);
+                        distTo.put(v,distance);
+                        double vCost=distTo.get(v)+g.distance(v,targetNode);
+                        fringe.add(v);
+                    }
+
+                }
+            }
+
+        }
+        List<Long> path=new LinkedList<>();
+        for(Long v=targetNode;v!=startNode;v=edgeTo.get(v)){
+            path.add(0,v);
+        }
+        path.add(0,startNode);
+        return path;
+
     }
 
     /**
@@ -37,7 +91,8 @@ public class Router {
      * route.
      */
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        return null; // FIXME
+
+        return null;
     }
 
 

@@ -8,9 +8,11 @@ import java.util.Map;
  * not draw the output correctly.
  */
 public class Rasterer {
-
     public Rasterer() {
         // YOUR CODE HERE
+
+
+
     }
 
     /**
@@ -44,9 +46,81 @@ public class Rasterer {
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         // System.out.println(params);
         Map<String, Object> results = new HashMap<>();
+        /**
         System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
                            + "your browser.");
+
+         */
+        double  queryULlon=params.get("ullon");
+        double  queryULlat=params.get("ullat");
+        double  queryLrlon=params.get("lrlon");
+        double  queryLrlat=params.get("lrlat");
+        double  queryW=params.get("w");
+        double  queryH=params.get("h");
+
+        double  queryLonDPP=(queryLrlon-queryULlon)/queryW;
+        int depth= getDepth(queryLonDPP);
+
+        results=getQuery(queryULlon,queryULlat,queryLrlon,queryLrlat,depth);
+
+
         return results;
+
+    }
+
+    private int getDepth(double queryLonDPP){
+        int curDepth=0;
+        while(curDepth<7){
+            double curLonDPP=(MapServer.ROOT_LRLON-MapServer.ROOT_ULLON)/(Math.pow(2,curDepth)*MapServer.TILE_SIZE);
+            if(curLonDPP<queryLonDPP){
+                return curDepth;
+            }
+            curDepth++;
+        }
+        return curDepth;
+    }
+
+    private  Map<String, Object> getQuery(double queryULlon,double queryULlat,
+                                double queryLrlon,double queryLrlat,int depth){
+        Map<String, Object> results = new HashMap<>();
+        if(queryLrlon<queryULlon || queryLrlat>queryULlat){
+            results.put("query_success", false);
+            return results;
+        }
+        double lonLenPerImg=Math.abs(MapServer.ROOT_LRLON-MapServer.ROOT_ULLON)/Math.pow(2,depth);
+        double latLenPerImg=Math.abs(MapServer.ROOT_LRLAT-MapServer.ROOT_ULLAT)/Math.pow(2,depth);
+        int colUL=(int)((queryULlon-MapServer.ROOT_ULLON)/lonLenPerImg);
+        int rowUL=(int)((MapServer.ROOT_ULLAT-queryULlat)/latLenPerImg);
+        int colLR=(int)((queryLrlon-MapServer.ROOT_ULLON)/lonLenPerImg);
+        int rowLR=(int)((MapServer.ROOT_ULLAT-queryLrlat)/latLenPerImg);
+        boolean isQSeccuss=false;
+        String[][] grid=new String[rowLR-rowUL+1][colLR-colUL+1];
+        for(int row=rowUL;row<=rowLR;row++){
+            for(int col=colUL;col<=colLR;col++){
+                if(validIdx(row,col,(int)Math.pow(2,depth))){
+                    grid[row-rowUL][col-colUL]="d"+depth+"_"+"x"+col+"_"+"y"+row+".png";
+                    isQSeccuss=true;
+                }
+            }
+        }
+
+        double ullon=MapServer.ROOT_ULLON+colUL*lonLenPerImg;
+        double ullat=MapServer.ROOT_ULLAT-rowUL*latLenPerImg;
+        double lrlon=MapServer.ROOT_ULLON+(colLR+1)*lonLenPerImg;
+        double lrlat=MapServer.ROOT_ULLAT-(rowLR+1)*latLenPerImg;
+        results.put("render_grid", grid);
+        results.put("raster_ul_lon", ullon);
+        results.put("raster_ul_lat", ullat);
+        results.put("raster_lr_lon", lrlon);
+        results.put("raster_lr_lat", lrlat);
+        results.put("depth", depth);
+        results.put("query_success", isQSeccuss);
+        return results;
+
+    }
+    private  boolean validIdx(int row,int col,int len){
+        return row>=0 && row<=len-1 && col>=0 && col<len-1;
     }
 
 }
+

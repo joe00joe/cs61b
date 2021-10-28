@@ -80,3 +80,4 @@ public class CSCourseDBHandler extends DefaultHandler {
         }
     }
 }
+
