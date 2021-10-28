@@ -55,21 +55,19 @@ public class Router {
         distTo.replace(startNode,0.0);
         while(!fringe.isEmpty()){
             long minNode=fringe.poll();
+            visted.add(minNode);
             if(minNode==targetNode){
                 break;
             }
-            if(!visted.contains(minNode)){
-                visted.add(minNode);
-                for(long v:g.adjacent(minNode)){
+            for(long v:g.adjacent(minNode)){
+                if(!visted.contains(v)) {
                     double distance=distTo.get(minNode)+g.distance(minNode,v);
-                    if(distance < distTo.get(v)){
-                        edgeTo.put(v,minNode);
-                        distTo.put(v,distance);
-                        double vCost=distTo.get(v)+g.distance(v,targetNode);
-                        fringe.add(v);
-                    }
-
+                    edgeTo.put(v,minNode);
+                    distTo.put(v,distance);
+                    fringe.add(v);
                 }
+
+
             }
 
         }
